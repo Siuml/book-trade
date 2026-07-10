@@ -1,0 +1,4 @@
+[bulid]
+  base = '.'
+  commmand = "npm run build"
+  publish = 'dist'

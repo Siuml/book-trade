@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head th:replace="~{fragments/layout :: head(#{payment.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: alert}"></div>
+    <div th:replace="~{fragments/layout :: alert-error}"></div>
+
+    <div th:if="${order != null && book != null}">
+        <div class="row mb-4">
+            <div class="col">
+                <h4 th:text="#{payment.title}">确认付款</h4>
+            </div>
+            <div class="col text-end">
+                <a th:href="@{/order/detail/{id}(id=${order.id})}" class="btn btn-sm btn-outline-primary" th:text="#{admin.back}">返回交易详情</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white" th:text="#{trade.detail.orderinfo}">订单信息</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong th:text="#{myorders.orderid}">订单编号：</strong>
+                                <span th:text="${order.orderNo}">订单号</span>
+                            </div>
+                            <div class="col-md-6">
+                                <strong th:text="#{myorders.status}">订单状态：</strong>
+                                <span class="badge bg-info" th:text="#{myorders.status.confirmed}">已确认</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong th:text="#{myorders.time}">下单时间：</strong>
+                                <span th:text="${#temporals.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}">时间</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header" th:text="#{trade.detail.bookinfo}">商品信息</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img th:if="${book.coverImage}" th:src="${book.coverImage}" class="img-fluid rounded" alt="封面">
+                                <div th:unless="${book.coverImage}" class="book-cover-placeholder detail d-flex align-items-center justify-content-center rounded">
+                                    <span class="text-muted" th:text="${book.title}">书名</span>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <h5 th:text="${book.title}">书名</h5>
+                                <p class="text-muted" th:text="#{book.author} + '：' + (${book.author} ?: #{book.detail.unknown})">作者：未知</p>
+                                <span th:if="${book.condition == 0}" class="badge bg-success me-2" th:text="#{book.condition.new}">全新</span>
+                                <span th:if="${book.condition == 1}" class="badge bg-info me-2" th:text="#{book.condition.good}">良好</span>
+                                <span th:if="${book.condition == 2}" class="badge bg-warning me-2" th:text="#{book.condition.fair}">一般</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header" th:text="#{payment.method}">选择支付方式</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payMethod" value="card" checked class="payment-radio">
+                                    <div class="payment-card selected">
+                                        <div class="payment-icon">💳</div>
+                                        <div class="payment-info">
+                                            <div class="payment-name" th:text="#{payment.method.card}">信用卡支付</div>
+                                            <div class="payment-desc">Visa、Mastercard、银联等</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payMethod" value="bank" class="payment-radio">
+                                    <div class="payment-card">
+                                        <div class="payment-icon">🏦</div>
+                                        <div class="payment-info">
+                                            <div class="payment-name" th:text="#{payment.method.bank}">银行转账</div>
+                                            <div class="payment-desc">支持各大银行转账</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payMethod" value="cash" class="payment-radio">
+                                    <div class="payment-card">
+                                        <div class="payment-icon">💵</div>
+                                        <div class="payment-info">
+                                            <div class="payment-name" th:text="#{payment.method.cash}">现金支付</div>
+                                            <div class="payment-desc">线下交易时使用</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payMethod" value="wallet" class="payment-radio">
+                                    <div class="payment-card">
+                                        <div class="payment-icon">📱</div>
+                                        <div class="payment-info">
+                                            <div class="payment-name">电子钱包</div>
+                                            <div class="payment-desc">支付宝、微信支付等</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-header" th:text="#{payment.amount}">付款金额</div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h1 class="price">₩<span th:text="${order.price}">0.00</span></h1>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span th:text="#{trade.detail.bookinfo}">商品金额</span>
+                                <span>₩<span th:text="${order.price}">0.00</span></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>手续费</span>
+                                <span class="text-success">₩0.00</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between">
+                                <strong th:text="#{payment.amount}">应付金额</strong>
+                                <strong class="price">₩<span th:text="${order.price}">0.00</span></strong>
+                            </div>
+                        </div>
+
+                        <form id="paymentForm" th:action="@{/order/pay/{id}(id=${order.id})}" method="post">
+                            <input type="hidden" name="payMethod" id="payMethodInput" value="card">
+                            <button type="submit" id="payButton" class="btn btn-primary btn-lg w-100" th:text="#{payment.submit}">确认付款</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-muted mt-4">
+            <p th:text="#{payment.note}">付款完成后，请等待卖家确认发货</p>
+        </div>
+    </div>
+
+    <div th:if="${order == null || book == null}" class="text-center text-muted py-5">
+        <h4 th:text="#{trade.detail.notfound}">订单不存在或已失效</h4>
+        <a th:href="@{/order/my}" class="btn btn-primary mt-3" th:text="#{admin.back}">返回订单列表</a>
+    </div>
+</div>
+
+<div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-5">
+                <div id="paymentSpinner" class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5 class="mt-3" id="paymentMessage" th:text="#{payment.processing}">正在处理支付...</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentRadios = document.querySelectorAll('.payment-radio');
+        const paymentCards = document.querySelectorAll('.payment-card');
+        const payMethodInput = document.getElementById('payMethodInput');
+        const payButton = document.getElementById('payButton');
+        const paymentForm = document.getElementById('paymentForm');
+        const paymentModal = document.getElementById('paymentModal');
+        const paymentMessage = document.getElementById('paymentMessage');
+
+        paymentRadios.forEach((radio, index) => {
+            radio.addEventListener('change', function() {
+                paymentCards.forEach(card => card.classList.remove('selected'));
+                paymentCards[index].classList.add('selected');
+                payMethodInput.value = this.value;
+            });
+        });
+
+        payButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const bootstrapModal = new bootstrap.Modal(paymentModal);
+            bootstrapModal.show();
+
+            setTimeout(function() {
+                paymentMessage.textContent = '正在验证支付信息...';
+            }, 1000);
+
+            setTimeout(function() {
+                paymentMessage.textContent = '正在完成支付...';
+            }, 2000);
+
+            setTimeout(function() {
+                paymentForm.submit();
+            }, 3000);
+        });
+    });
+</script>
+<style>
+    .payment-method-label {
+        cursor: pointer;
+        display: block;
+    }
+    .payment-radio {
+        display: none;
+    }
+    .payment-card {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    .payment-card:hover {
+        border-color: #0d6efd;
+    }
+    .payment-card.selected {
+        border-color: #0d6efd;
+        background: #e7f3ff;
+    }
+    .payment-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    .payment-name {
+        font-weight: 500;
+        color: #212529;
+    }
+    .payment-desc {
+        font-size: 12px;
+        color: #6c757d;
+    }
+    .price {
+        color: #dc3545;
+    }
+</style>
+</body>
+</html>

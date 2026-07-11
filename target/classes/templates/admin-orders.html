@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head th:replace="~{fragments/layout :: head(#{admin.orders.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: alert}"></div>
+    <div th:replace="~{fragments/layout :: alert-error}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 th:text="#{admin.orders.title}">订单管理</h4>
+        <a th:href="@{/admin}" class="btn btn-sm btn-outline-primary" th:text="#{admin.back}">返回管理后台</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/orders}" method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label" th:text="#{myorders.status}">订单状态</label>
+                    <select class="form-select form-select-sm" name="status">
+                        <option value="" th:if="${status == null}" th:text="#{admin.all}">全部</option>
+                        <option value="" th:else>全部</option>
+                        <option value="0" th:if="${status == 0}" selected th:text="#{myorders.status.pending}">待确认</option>
+                        <option value="0" th:else th:text="#{myorders.status.pending}">待确认</option>
+                        <option value="1" th:if="${status == 1}" selected th:text="#{myorders.status.confirmed}">已确认</option>
+                        <option value="1" th:else th:text="#{myorders.status.confirmed}">已确认</option>
+                        <option value="2" th:if="${status == 2}" selected th:text="#{myorders.status.completed}">已完成</option>
+                        <option value="2" th:else th:text="#{myorders.status.completed}">已完成</option>
+                        <option value="3" th:if="${status == 3}" selected th:text="#{myorders.status.cancelled}">已取消</option>
+                        <option value="3" th:else th:text="#{myorders.status.cancelled}">已取消</option>
+                        <option value="4" th:if="${status == 4}" selected th:text="#{myorders.status.paid}">已付款</option>
+                        <option value="4" th:else th:text="#{myorders.status.paid}">已付款</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" th:text="#{admin.startdate}">开始日期</label>
+                    <input type="date" class="form-control form-control-sm" name="startDate" th:value="${startDate}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" th:text="#{admin.enddate}">结束日期</label>
+                    <input type="date" class="form-control form-control-sm" name="endDate" th:value="${endDate}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-sm btn-primary" th:text="#{admin.search}">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th th:text="#{myorders.orderid}">订单号</th>
+                <th th:text="#{myorders.buyer}">买家</th>
+                <th th:text="#{myorders.seller}">卖家</th>
+                <th th:text="#{book.title}">书籍</th>
+                <th th:text="#{myorders.amount}">交易金额</th>
+                <th th:text="#{myorders.status}">状态</th>
+                <th th:text="#{myorders.time}">下单时间</th>
+                <th th:text="#{admin.action}">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td>
+                    <a th:href="@{/admin/order/detail/{id}(id=${order.id})}" th:text="${order.orderNo}">订单号</a>
+                </td>
+                <td th:text="${order.buyerId}">买家</td>
+                <td th:text="${order.sellerId}">卖家</td>
+                <td th:text="${order.bookId}">书籍</td>
+                <td>₩<span th:text="${order.price}">0.00</span></td>
+                <td>
+                    <span th:if="${order.status == 0}" class="badge bg-warning text-dark" th:text="#{myorders.status.pending}">待确认</span>
+                    <span th:if="${order.status == 1}" class="badge bg-info" th:text="#{myorders.status.confirmed}">已确认</span>
+                    <span th:if="${order.status == 4}" class="badge bg-primary" th:text="#{myorders.status.paid}">已付款</span>
+                    <span th:if="${order.status == 2}" class="badge bg-success" th:text="#{myorders.status.completed}">已完成</span>
+                    <span th:if="${order.status == 3}" class="badge bg-secondary" th:text="#{myorders.status.cancelled}">已取消</span>
+                </td>
+                <td th:text="${#temporals.format(order.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
+                <td>
+                    <a th:href="@{/admin/order/detail/{id}(id=${order.id})}" class="btn btn-sm btn-outline-primary" th:text="#{admin.detail}">详情</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${orders == null or orders.isEmpty()}" class="text-muted text-center py-4" th:text="#{admin.noorders}">暂无订单</div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

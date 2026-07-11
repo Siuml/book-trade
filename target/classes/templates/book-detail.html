@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head th:replace="~{fragments/layout :: head(#{book.detail.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: alert}"></div>
+    <div th:replace="~{fragments/layout :: alert-error}"></div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <img th:if="${book.coverImage}" th:src="${book.coverImage}" class="img-fluid rounded book-detail-cover" alt="封面">
+            <div th:unless="${book.coverImage}" class="book-cover-placeholder detail d-flex align-items-center justify-content-center rounded">
+                <span class="text-muted" th:text="${book.title}">书名</span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2 th:text="${book.title}">书名</h2>
+            <p class="text-muted" th:text="#{book.author} + '：' + (${book.author} ?: #{book.detail.unknown})">作者：未知</p>
+            <p th:if="${book.isbn}" th:text="#{book.isbn} + '：' + ${book.isbn}">ISBN：</p>
+            <p th:if="${category}" th:text="#{book.category} + '：' + ${#messages.msg('category.' + category.id)}">分类：</p>
+            <p th:text="#{book.seller} + '：' + ${seller.nickname}">卖家：</p>
+            <h3 class="price mb-3">₩<span th:text="${book.price}"></span></h3>
+            <span th:if="${book.condition == 0}" class="badge bg-success me-2" th:text="#{book.condition.new}">全新</span>
+            <span th:if="${book.condition == 1}" class="badge bg-info me-2" th:text="#{book.condition.good}">良好</span>
+            <span th:if="${book.condition == 2}" class="badge bg-warning me-2" th:text="#{book.condition.fair}">一般</span>
+            <p th:text="${book.description}">描述</p>
+
+            <div th:if="${book.status == 1}">
+                <form th:if="${loginUser != null and loginUser.id != book.sellerId}"
+                      th:action="@{/order/create/{id}(id=${book.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-primary" th:text="#{book.buy}">立即购买</button>
+                </form>
+                <span th:if="${loginUser == null}" class="text-muted">
+                    <a th:href="@{/login}" th:text="#{navbar.login}">登录</a> <span th:text="#{book.detail.buynow}">后可购买</span>
+                </span>
+                <span th:if="${loginUser != null and loginUser.id == book.sellerId}" class="text-muted" th:text="#{book.detail.myself}">
+                    这是你发布的书籍
+                </span>
+            </div>
+            <div th:if="${book.status != 1}">
+                <span th:if="${book.status == 2}" class="badge bg-secondary" th:text="#{book.detail.sold}">已售出</span>
+                <span th:if="${book.status != 2}" class="badge bg-secondary" th:text="#{book.detail.off}">已下架</span>
+            </div>
+
+            <a th:href="@{/}" class="btn btn-link mt-3" th:text="#{book.detail.backhome}">返回首页</a>
+        </div>
+    </div>
+
+    <div class="row mt-6">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 th:text="#{comment.title}">留言板</h5>
+                    <span class="badge bg-light text-primary ms-2" th:text="${comments != null ? comments.size() : 0}">0</span> <span th:text="#{comment.count}">条留言</span>
+                </div>
+                <div class="card-body">
+                    <div th:if="${loginUser != null}" class="mb-4">
+                        <form th:action="@{/book/comment/{id}(id=${book.id})}" method="post">
+                            <div class="mb-3">
+                                <textarea name="content" class="form-control" rows="3" placeholder="#{comment.placeholder}" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" th:text="#{comment.submit}">发布留言</button>
+                        </form>
+                    </div>
+                    <div th:if="${loginUser == null}" class="mb-4 alert alert-info">
+                        <a th:href="@{/login}" th:text="#{navbar.login}">登录</a> <span th:text="#{comment.login}">后可发表留言</span>
+                    </div>
+
+                    <div th:if="${comments != null && !comments.isEmpty()}" class="list-group">
+                        <div th:each="comment : ${comments}" class="list-group-item comment-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong th:text="${comment.userNickname}">用户名</strong>
+                                    <span class="text-muted ms-2" th:text="#{comment.time} + '：' + ${#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm')}">时间</span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary reply-btn" th:attr="data-comment-id=${comment.id}" th:text="#{comment.reply}">回复</button>
+                            </div>
+                            <p class="mt-2" th:text="${comment.content}">留言内容</p>
+
+                            <div th:if="${comment.replies != null && !comment.replies.isEmpty()}" class="replies-container mt-3">
+                                <div th:each="reply : ${comment.replies}" class="reply-item bg-light rounded p-3 mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <strong class="text-primary" th:text="${reply.userNickname}">回复者</strong>
+                                        <span class="text-muted text-sm" th:text="#{comment.time} + '：' + ${#temporals.format(reply.createTime, 'yyyy-MM-dd HH:mm')}">时间</span>
+                                    </div>
+                                    <p class="mt-1" th:text="${reply.content}">回复内容</p>
+                                </div>
+                            </div>
+
+                            <div th:if="${comment.replies == null || comment.replies.isEmpty()}" class="replies-container mt-3">
+                            </div>
+
+                            <div class="reply-form-container mt-3" style="display: none;" th:id="|reply-form-${comment.id}|">
+                                <form th:action="@{/book/reply/{parentId}(parentId=${comment.id})}" method="post" class="reply-form">
+                                    <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="#{comment.reply.placeholder}" required></textarea>
+                                    <div class="d-flex justify-content-end mt-2">
+                                        <button type="button" class="btn btn-sm btn-secondary me-2 cancel-reply-btn" th:attr="data-comment-id=${comment.id}">取消</button>
+                                        <button type="submit" class="btn btn-sm btn-primary" th:text="#{comment.reply.submit}">发送回复</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${comments == null || comments.isEmpty()}" class="text-center text-muted py-4">
+                        <p th:text="#{comment.empty}">暂无留言，快来发表第一条吧！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const replyBtns = document.querySelectorAll('.reply-btn');
+        const cancelBtns = document.querySelectorAll('.cancel-reply-btn');
+
+        replyBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                const formContainer = document.getElementById('reply-form-' + commentId);
+                
+                if (formContainer.style.display === 'none') {
+                    formContainer.style.display = 'block';
+                    formContainer.querySelector('textarea').focus();
+                } else {
+                    formContainer.style.display = 'none';
+                }
+            });
+        });
+
+        cancelBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                const formContainer = document.getElementById('reply-form-' + commentId);
+                formContainer.style.display = 'none';
+            });
+        });
+    });
+</script>
+</body>
+</html>

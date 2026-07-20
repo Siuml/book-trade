@@ -86,3 +86,17 @@ CREATE TABLE IF NOT EXISTS `payment` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_order_id` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付表';
+
+CREATE TABLE IF NOT EXISTS `notification` (
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `user_id`     BIGINT       NOT NULL COMMENT '接收用户ID',
+    `type`        VARCHAR(20)  NOT NULL COMMENT '类型：order/comment/system',
+    `title`       VARCHAR(200) NOT NULL COMMENT '标题',
+    `content`     TEXT         DEFAULT NULL COMMENT '内容',
+    `related_id`  BIGINT       DEFAULT NULL COMMENT '关联ID（书籍/订单）',
+    `is_read`     TINYINT      NOT NULL DEFAULT 0 COMMENT '0-未读 1-已读',
+    `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_user_read` (`user_id`, `is_read`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知表';

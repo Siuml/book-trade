@@ -71,7 +71,16 @@ public class BookService {
         return bookMapper.updateById(book) > 0;
     }
 
+    public List<Book> listOnSaleBySeller(Long sellerId) {
+        return bookMapper.selectList(
+                new LambdaQueryWrapper<Book>()
+                        .eq(Book::getSellerId, sellerId)
+                        .eq(Book::getStatus, 1)
+                        .orderByDesc(Book::getCreateTime));
+    }
+
     public boolean delete(Long id) {
         return bookMapper.deleteById(id) > 0;
     }
 }
+

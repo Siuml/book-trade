@@ -18,7 +18,7 @@
 
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}">📚 <span th:text="#{title}">二手书交易</span></a>
+        <a class="navbar-brand" th:href="@{/}">&#128218; <span th:text="#{title}">二手书交易</span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,7 +31,7 @@
                     <a class="nav-link" th:href="@{/book/publish}"><span th:text="#{navbar.publish}">发布书籍</span></a>
                 </li>
                 <li class="nav-item" th:if="${loginUser != null}">
-                    <a class="nav-link" th:href="@{/book/my}"><span th:text="#{navbar.mybooks}">我的发布</span></a>
+                    <a class="nav-link" th:href="@{/profile}"><span th:text="#{navbar.profile}">个人中心</span></a>
                 </li>
                 <li class="nav-item" th:if="${loginUser != null}">
                     <a class="nav-link" th:href="@{/order/my}"><span th:text="#{navbar.myorders}">我的订单</span></a>
@@ -56,6 +56,15 @@
                 </li>
                 <li class="nav-item" th:if="${loginUser == null}">
                     <a class="nav-link" th:href="@{/register}"><span th:text="#{navbar.register}">注册</span></a>
+                </li>
+                <li class="nav-item" th:if="${loginUser != null}">
+                    <a class="nav-link position-relative" th:href="@{/notifications}">
+                        &#128276;
+                        <span th:if="${unreadCount != null and unreadCount > 0}"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                              style="font-size:0.6rem;"
+                              th:text="${unreadCount > 99 ? '99+' : unreadCount}">0</span>
+                    </a>
                 </li>
                 <li class="nav-item" th:if="${loginUser != null}">
                     <span class="nav-link text-light"><span th:text="#{navbar.greeting(${loginUser.nickname})}">你好，用户</span></span>

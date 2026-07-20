@@ -1,6 +1,7 @@
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\Comment.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\CategoryService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\HomeController.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\GlobalModelAdvice.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\PaymentMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\BookService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\AdminController.java
@@ -9,6 +10,8 @@ G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\OrderMap
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\BookController.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\BookMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\CommentMapper.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\ProfileController.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\NotificationMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\OrderService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\OrderLog.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\UserService.java
@@ -17,14 +20,17 @@ G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\Comment
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\User.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\LoginInterceptor.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\InterceptorConfig.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\NotificationController.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\Category.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\OrderLogMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\PaymentService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\WebConfig.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\NotificationService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\TradeOrder.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\UserController.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\CategoryMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\BookTradeApplication.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\Notification.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\mapper\UserMapper.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\Payment.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\TestEntity.java

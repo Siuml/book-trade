@@ -1,8 +1,12 @@
 package com.booktrade.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.booktrade.entity.Book;
+import com.booktrade.entity.Notification;
 import com.booktrade.entity.OrderLog;
 import com.booktrade.entity.TradeOrder;
+import com.booktrade.mapper.BookMapper;
+import com.booktrade.mapper.NotificationMapper;
 import com.booktrade.mapper.OrderLogMapper;
 import com.booktrade.mapper.OrderMapper;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,15 @@ public class OrderService {
 
     private final OrderMapper orderMapper;
     private final OrderLogMapper orderLogMapper;
+    private final BookMapper bookMapper;
+    private final NotificationMapper notificationMapper;
 
-    public OrderService(OrderMapper orderMapper, OrderLogMapper orderLogMapper) {
+    public OrderService(OrderMapper orderMapper, OrderLogMapper orderLogMapper,
+                        BookMapper bookMapper, NotificationMapper notificationMapper) {
         this.orderMapper = orderMapper;
         this.orderLogMapper = orderLogMapper;
+        this.bookMapper = bookMapper;
+        this.notificationMapper = notificationMapper;
     }
 
     public List<TradeOrder> listByBuyer(Long buyerId) {
@@ -82,6 +91,18 @@ public class OrderService {
         boolean result = orderMapper.insert(order) > 0;
         if (result) {
             addLog(order.getId(), null, null, "订单创建");
+            Book book = bookMapper.selectById(order.getBookId());
+            if (book != null) {
+                Notification notif = new Notification();
+                notif.setUserId(order.getSellerId());
+                notif.setType("order");
+                notif.setTitle("书籍被下单");
+                notif.setContent("您的书籍《" + book.getTitle() + "》已被下单，订单编号：" + order.getOrderNo() + "，请及时确认。");
+                notif.setRelatedId(order.getId());
+                notif.setIsRead(0);
+                notif.setCreateTime(LocalDateTime.now());
+                notificationMapper.insert(notif);
+            }
         }
         return result;
     }
@@ -94,18 +115,10 @@ public class OrderService {
         if (result && operatorId != null) {
             String action = "";
             switch (status) {
-                case 0:
-                    action = "订单重置为待确认";
-                    break;
-                case 1:
-                    action = "管理员确认订单";
-                    break;
-                case 2:
-                    action = "订单完成";
-                    break;
-                case 3:
-                    action = "订单取消";
-                    break;
+                case 0: action = "订单重置为待确认"; break;
+                case 1: action = "管理员确认订单"; break;
+                case 2: action = "订单完成"; break;
+                case 3: action = "订单取消"; break;
             }
             addLog(id, operatorId, operatorName, action);
         }

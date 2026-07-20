@@ -3,32 +3,23 @@
 <head th:replace="~{fragments/layout :: head(#{mybooks.title})}"></head>
 <body>
 <div th:replace="~{fragments/layout :: navbar}"></div>
-
 <div class="container">
     <div th:replace="~{fragments/layout :: alert}"></div>
-
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 th:text="#{mybooks.title}">我的发布</h4>
-        <a th:href="@{/book/publish}" class="btn btn-primary btn-sm" th:text="#{navbar.publish}">发布新书籍</a>
+        <a th:href="@{/book/publish}" class="btn btn-primary btn-sm" th:text="#{navbar.publish}">发布新书</a>
     </div>
-
     <div class="table-responsive" th:if="${books != null and !books.isEmpty()}">
         <table class="table table-hover">
-            <thead>
-            <tr>
-                <th th:text="#{book.title}">书名</th>
-                <th th:text="#{book.author}">作者</th>
-                <th th:text="#{book.price}">价格</th>
-                <th th:text="#{book.condition}">状态</th>
-                <th th:text="#{mybooks.time}">发布时间</th>
-                <th th:text="#{mybooks.action}">操作</th>
-            </tr>
-            </thead>
+            <thead><tr>
+                <th th:text="#{book.title}">书名</th><th th:text="#{book.author}">作者</th>
+                <th th:text="#{book.price}">价格</th><th th:text="#{book.condition}">状态</th>
+                <th th:text="#{mybooks.time}">发布时间</th><th th:text="#{mybooks.action}">操作</th>
+            </tr></thead>
             <tbody>
             <tr th:each="book : ${books}">
-                <td th:text="${book.title}">书名</td>
-                <td th:text="${book.author}">作者</td>
-                <td>₩<span th:text="${book.price}">0.00</span></td>
+                <td th:text="${book.title}">书名</td><td th:text="${book.author}">作者</td>
+                <td>¥<span th:text="${book.price}">0.00</span></td>
                 <td>
                     <span th:if="${book.status == 0}" class="badge bg-secondary" th:text="#{admin.off}">已下架</span>
                     <span th:if="${book.status == 1}" class="badge bg-success" th:text="#{book.status}">在售</span>
@@ -36,23 +27,17 @@
                 </td>
                 <td th:text="${#temporals.format(book.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
                 <td>
-                    <a th:if="${book.status == 1}" th:href="@{/book/edit/{id}(id=${book.id})}"
-                       class="btn btn-sm btn-outline-primary" th:text="#{mybooks.edit}">编辑</a>
-                    <a th:if="${book.status == 1}" th:href="@{/book/off/{id}(id=${book.id})}"
-                       class="btn btn-sm btn-outline-danger"
-                       th:onclick="|return confirm('#{mybooks.offconfirm}')|" th:text="#{mybooks.off}">下架</a>
+                    <a th:if="${book.status == 1}" th:href="@{/book/edit/{id}(id=${book.id})}" class="btn btn-sm btn-outline-primary" th:text="#{mybooks.edit}">编辑</a>
+                    <a th:if="${book.status == 1}" th:href="@{/book/off/{id}(id=${book.id})}" class="btn btn-sm btn-outline-danger" th:onclick="|return confirm('#{mybooks.offconfirm}')|" th:text="#{mybooks.off}">下架</a>
                 </td>
-            </tr>
-            </tbody>
+            </tr></tbody>
         </table>
     </div>
-
     <div th:if="${books == null or books.isEmpty()}" class="text-center text-muted py-5">
-        <p th:text="#{mybooks.noresult}">你还没有发布任何书籍</p>
+        <p th:text="#{mybooks.noresult}">暂无发布记录</p>
         <a th:href="@{/book/publish}" class="btn btn-primary" th:text="#{mybooks.gopublish}">去发布</a>
     </div>
 </div>
-
 <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

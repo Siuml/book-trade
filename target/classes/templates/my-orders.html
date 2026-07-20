@@ -11,25 +11,15 @@
     <h4 class="mb-3" th:text="#{myorders.bought}">我购买的</h4>
     <div class="table-responsive mb-5" th:if="${buyOrders != null and !buyOrders.isEmpty()}">
         <table class="table table-hover">
-            <thead>
-            <tr>
-                <th th:text="#{myorders.orderid}">订单号</th>
-                <th th:text="#{book.title}">书籍ID</th>
-                <th th:text="#{myorders.amount}">价格</th>
-                <th th:text="#{myorders.status}">状态</th>
-                <th th:text="#{myorders.time}">下单时间</th>
-                <th th:text="#{myorders.action}">操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${buyOrders}">
-                <td>
-                    <a th:href="@{/order/detail/{id}(id=${order.id})}" th:text="${order.orderNo}">订单号</a>
-                </td>
-                <td>
-                    <a th:href="@{/book/detail/{id}(id=${order.bookId})}" th:text="${order.bookId}">书籍</a>
-                </td>
-                <td>₩<span th:text="${order.price}">0.00</span></td>
+            <thead><tr>
+                <th th:text="#{myorders.orderid}">订单号</th><th th:text="#{myorders.bookname}">书籍</th>
+                <th th:text="#{myorders.amount}">金额</th><th th:text="#{myorders.status}">状态</th>
+                <th th:text="#{myorders.time}">下单时间</th><th th:text="#{myorders.action}">操作</th>
+            </tr></thead>
+            <tbody><tr th:each="order : ${buyOrders}">
+                <td><a th:href="@{/order/detail/{id}(id=${order.id})}" th:text="${order.orderNo}">订单号</a></td>
+                <td><a th:href="@{/book/detail/{id}(id=${order.bookId})}" th:text="${order.bookId}">书籍</a></td>
+                <td><span th:text="'¥' + ${order.price}">0.00</span></td>
                 <td>
                     <span th:if="${order.status == 0}" class="badge bg-warning text-dark" th:text="#{myorders.status.pending}">待确认</span>
                     <span th:if="${order.status == 1}" class="badge bg-info" th:text="#{myorders.status.confirmed}">已确认</span>
@@ -40,16 +30,11 @@
                 <td th:text="${#temporals.format(order.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
                 <td>
                     <a th:href="@{/order/detail/{id}(id=${order.id})}" class="btn btn-sm btn-outline-primary" th:text="#{admin.detail}">详情</a>
-                    <a th:if="${order.status == 1}" th:href="@{/order/payment/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-primary" th:text="#{myorders.pay}">去付款</a>
-                    <a th:if="${order.status == 4}" th:href="@{/order/complete/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-success" th:text="#{myorders.complete}">确认完成</a>
-                    <a th:if="${order.status == 0}" th:href="@{/order/cancel/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-outline-danger"
-                       th:onclick="|return confirm('#{myorders.cancelconfirm}')|" th:text="#{myorders.cancel}">取消</a>
+                    <a th:if="${order.status == 1}" th:href="@{/order/payment/{id}(id=${order.id})}" class="btn btn-sm btn-primary" th:text="#{myorders.pay}">去付款</a>
+                    <a th:if="${order.status == 4}" th:href="@{/order/complete/{id}(id=${order.id})}" class="btn btn-sm btn-success" th:text="#{myorders.complete}">确认完成</a>
+                    <a th:if="${order.status == 0}" th:href="@{/order/cancel/{id}(id=${order.id})}" class="btn btn-sm btn-outline-danger" th:onclick="return confirm('确定取消订单？')" th:text="#{myorders.cancel}">取消</a>
                 </td>
-            </tr>
-            </tbody>
+            </tr></tbody>
         </table>
     </div>
     <div th:if="${buyOrders == null or buyOrders.isEmpty()}" class="text-muted mb-5" th:text="#{myorders.nobought}">暂无购买记录</div>
@@ -57,25 +42,15 @@
     <h4 class="mb-3" th:text="#{myorders.sold}">我卖出的</h4>
     <div class="table-responsive" th:if="${sellOrders != null and !sellOrders.isEmpty()}">
         <table class="table table-hover">
-            <thead>
-            <tr>
-                <th th:text="#{myorders.orderid}">订单号</th>
-                <th th:text="#{book.title}">书籍ID</th>
-                <th th:text="#{myorders.amount}">价格</th>
-                <th th:text="#{myorders.status}">状态</th>
-                <th th:text="#{myorders.time}">下单时间</th>
-                <th th:text="#{myorders.action}">操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${sellOrders}">
-                <td>
-                    <a th:href="@{/order/detail/{id}(id=${order.id})}" th:text="${order.orderNo}">订单号</a>
-                </td>
-                <td>
-                    <a th:href="@{/book/detail/{id}(id=${order.bookId})}" th:text="${order.bookId}">书籍</a>
-                </td>
-                <td>₩<span th:text="${order.price}">0.00</span></td>
+            <thead><tr>
+                <th th:text="#{myorders.orderid}">订单号</th><th th:text="#{myorders.bookname}">书籍</th>
+                <th th:text="#{myorders.amount}">金额</th><th th:text="#{myorders.status}">状态</th>
+                <th th:text="#{myorders.time}">下单时间</th><th th:text="#{myorders.action}">操作</th>
+            </tr></thead>
+            <tbody><tr th:each="order : ${sellOrders}">
+                <td><a th:href="@{/order/detail/{id}(id=${order.id})}" th:text="${order.orderNo}">订单号</a></td>
+                <td><a th:href="@{/book/detail/{id}(id=${order.bookId})}" th:text="${order.bookId}">书籍</a></td>
+                <td><span th:text="'¥' + ${order.price}">0.00</span></td>
                 <td>
                     <span th:if="${order.status == 0}" class="badge bg-warning text-dark" th:text="#{myorders.status.pending}">待确认</span>
                     <span th:if="${order.status == 1}" class="badge bg-info" th:text="#{myorders.status.confirmed}">已确认</span>
@@ -83,22 +58,17 @@
                     <span th:if="${order.status == 2}" class="badge bg-success" th:text="#{myorders.status.completed}">已完成</span>
                     <span th:if="${order.status == 3}" class="badge bg-secondary" th:text="#{myorders.status.cancelled}">已取消</span>
                 </td>
-                <td th:text="#{#temporals.format(order.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
+                <td th:text="${#temporals.format(order.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
                 <td>
                     <a th:href="@{/order/detail/{id}(id=${order.id})}" class="btn btn-sm btn-outline-primary" th:text="#{admin.detail}">详情</a>
-                    <a th:if="${order.status == 0}" th:href="@{/order/confirm/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-primary" th:text="#{myorders.confirm}">确认订单</a>
-                    <a th:if="${order.status == 4}" th:href="@{/order/complete/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-success" th:text="#{myorders.complete}">确认完成</a>
-                    <a th:if="${order.status == 0}" th:href="@{/order/cancel/{id}(id=${order.id})}"
-                       class="btn btn-sm btn-outline-danger"
-                       th:onclick="|return confirm('#{myorders.cancelconfirm}')|" th:text="#{myorders.cancel}">取消</a>
+                    <a th:if="${order.status == 0}" th:href="@{/order/confirm/{id}(id=${order.id})}" class="btn btn-sm btn-primary" th:text="#{myorders.confirm}">确认订单</a>
+                    <a th:if="${order.status == 4}" th:href="@{/order/complete/{id}(id=${order.id})}" class="btn btn-sm btn-success" th:text="#{myorders.complete}">确认完成</a>
+                    <a th:if="${order.status == 0}" th:href="@{/order/cancel/{id}(id=${order.id})}" class="btn btn-sm btn-outline-danger" th:onclick="return confirm('确定取消订单？')" th:text="#{myorders.cancel}">取消</a>
                 </td>
-            </tr>
-            </tbody>
+            </tr></tbody>
         </table>
     </div>
-    <div th:if="${sellOrders == null or sellOrders.isEmpty()}" class="text-muted" th:text="#{myorders.nosold}">暂无卖出记录</div>
+    <div th:if="${sellOrders == null or sellOrders.isEmpty()}" class="text-muted" th:text="#{myorders.nosold}">暂无售出记录</div>
 </div>
 
 <div th:replace="~{fragments/layout :: scripts}"></div>

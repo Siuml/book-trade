@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head th:replace="~{fragments/layout :: head(#{profile.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: alert}"></div>
+    <div th:replace="~{fragments/layout :: alert-error}"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white" th:text="#{profile.info}">个人信息</div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto" style="width:80px;height:80px;font-size:32px;">
+                            <span th:text="${profileUser.nickname != null ? #strings.substring(profileUser.nickname,0,1) : '?'}">?</span>
+                        </div>
+                    </div>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted" th:text="#{register.username}">用户名</td>
+                            <td th:text="${profileUser.username}">用户名</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted" th:text="#{register.nickname}">昵称</td>
+                            <td th:text="${profileUser.nickname}">昵称</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted" th:text="#{register.phone}">手机号</td>
+                            <td th:text="${profileUser.phone != null ? profileUser.phone : '-'}">-</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted" th:text="#{profile.role}">角色</td>
+                            <td>
+                                <span th:if="${profileUser.role == 1}" class="badge bg-danger" th:text="#{profile.admin}">管理员</span>
+                                <span th:if="${profileUser.role == 0}" class="badge bg-info" th:text="#{profile.student}">学生</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted" th:text="#{seller.memberSince}">注册时间</td>
+                            <td th:text="${#temporals.format(profileUser.createTime, 'yyyy-MM-dd')}">日期</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <span th:text="#{profile.myBooks}">我发布的书籍</span>
+                    <a th:href="@{/book/publish}" class="btn btn-light btn-sm" th:text="#{navbar.publish}">发布新书</a>
+                </div>
+                <div class="card-body">
+                    <div th:if="${books != null and !books.isEmpty()}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th th:text="#{book.title}">书名</th>
+                                        <th th:text="#{book.price}">价格</th>
+                                        <th th:text="#{book.condition}">状态</th>
+                                        <th th:text="#{mybooks.action}">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="book : ${books}">
+                                        <td>
+                                            <a th:href="@{/book/detail/{id}(id=${book.id})}" th:text="${book.title}">书名</a>
+                                        </td>
+                                        <td>¥<span th:text="${book.price}">0.00</span></td>
+                                        <td>
+                                            <span th:if="${book.status == 0}" class="badge bg-secondary" th:text="#{admin.off}">已下架</span>
+                                            <span th:if="${book.status == 1}" class="badge bg-success" th:text="#{book.status}">在售</span>
+                                            <span th:if="${book.status == 2}" class="badge bg-warning text-dark" th:text="#{admin.sold}">已售</span>
+                                        </td>
+                                        <td>
+                                            <a th:if="${book.status == 1}" th:href="@{/book/edit/{id}(id=${book.id})}" class="btn btn-sm btn-outline-primary" th:text="#{mybooks.edit}">编辑</a>
+                                            <a th:if="${book.status == 1}" th:href="@{/book/off/{id}(id=${book.id})}" class="btn btn-sm btn-outline-danger" th:onclick="|return confirm(`#{mybooks.offconfirm}`)|" th:text="#{mybooks.off}">下架</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div th:if="${books == null or books.isEmpty()}" class="text-center text-muted py-4">
+                        <p th:text="#{mybooks.noresult}">暂无发布记录</p>
+                        <a th:href="@{/book/publish}" class="btn btn-primary" th:text="#{mybooks.gopublish}">去发布</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

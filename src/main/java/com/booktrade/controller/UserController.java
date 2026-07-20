@@ -37,9 +37,19 @@ public class UserController {
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
+                           @RequestParam String confirmPassword,
                            @RequestParam String nickname,
                            @RequestParam(required = false) String phone,
                            Model model) {
+        if (password == null || !password.equals(confirmPassword)) {
+            model.addAttribute("error", "两次输入的密码不一致");
+            return "register";
+        }
+        if (password.length() < 6) {
+            model.addAttribute("error", "密码长度至少6位");
+            return "register";
+        }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);

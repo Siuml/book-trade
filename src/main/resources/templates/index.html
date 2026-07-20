@@ -12,7 +12,7 @@
         <div class="card-body">
             <form th:action="@{/}" method="get" class="row g-3">
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="keyword" 
+                    <input type="text" class="form-control" name="keyword"
                            th:placeholder="#{index.search}"
                            th:value="${keyword}">
                 </div>
@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${book.title}">书名</h5>
                     <p class="card-text text-muted" th:text="${book.author}">作者</p>
-                    <p class="card-text price">₩<span th:text="${book.price}">0.00</span></p>
+                    <p class="card-text price">¥<span th:text="${book.price}">0.00</span></p>
                     <span th:if="${book.condition == 0}" class="badge bg-success me-1" th:text="#{book.condition.new}">全新</span>
                     <span th:if="${book.condition == 1}" class="badge bg-info me-1" th:text="#{book.condition.good}">良好</span>
                     <span th:if="${book.condition == 2}" class="badge bg-warning me-1" th:text="#{book.condition.fair}">一般</span>

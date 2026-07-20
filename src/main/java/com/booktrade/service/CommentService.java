@@ -1,9 +1,13 @@
 package com.booktrade.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.booktrade.entity.Book;
 import com.booktrade.entity.Comment;
+import com.booktrade.entity.Notification;
 import com.booktrade.entity.User;
+import com.booktrade.mapper.BookMapper;
 import com.booktrade.mapper.CommentMapper;
+import com.booktrade.mapper.NotificationMapper;
 import com.booktrade.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +19,15 @@ public class CommentService {
 
     private final CommentMapper commentMapper;
     private final UserMapper userMapper;
+    private final BookMapper bookMapper;
+    private final NotificationMapper notificationMapper;
 
-    public CommentService(CommentMapper commentMapper, UserMapper userMapper) {
+    public CommentService(CommentMapper commentMapper, UserMapper userMapper,
+                          BookMapper bookMapper, NotificationMapper notificationMapper) {
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
+        this.bookMapper = bookMapper;
+        this.notificationMapper = notificationMapper;
     }
 
     public List<Comment> listByBookId(Long bookId) {
@@ -56,7 +65,25 @@ public class CommentService {
 
     public boolean create(Comment comment) {
         comment.setCreateTime(LocalDateTime.now());
-        return commentMapper.insert(comment) > 0;
+        boolean result = commentMapper.insert(comment) > 0;
+        if (result) {
+            Book book = bookMapper.selectById(comment.getBookId());
+            if (book != null && !book.getSellerId().equals(comment.getUserId())) {
+                User commenter = userMapper.selectById(comment.getUserId());
+                String nickname = commenter != null ? commenter.getNickname() : "匿名用户";
+                Notification notif = new Notification();
+                notif.setUserId(book.getSellerId());
+                notif.setType("comment");
+                notif.setTitle("新留言");
+                notif.setContent(nickname + " 在您的书籍《" + book.getTitle() + "》下发表了留言：" +
+                        (comment.getContent().length() > 50 ? comment.getContent().substring(0, 50) + "..." : comment.getContent()));
+                notif.setRelatedId(book.getId());
+                notif.setIsRead(0);
+                notif.setCreateTime(LocalDateTime.now());
+                notificationMapper.insert(notif);
+            }
+        }
+        return result;
     }
 
     public Comment getById(Long id) {

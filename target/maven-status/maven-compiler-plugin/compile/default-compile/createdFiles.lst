@@ -23,6 +23,7 @@ com\booktrade\BookTradeApplication.class
 com\booktrade\service\CommentService.class
 com\booktrade\entity\Comment.class
 com\booktrade\service\OrderService.class
+com\booktrade\config\SqlAutoRepairRunner.class
 com\booktrade\mapper\CategoryMapper.class
 com\booktrade\config\GlobalModelAdvice.class
 com\booktrade\entity\Book.class

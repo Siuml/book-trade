@@ -19,6 +19,7 @@ G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\Orde
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\service\CommentService.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\User.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\LoginInterceptor.java
+G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\SqlAutoRepairRunner.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\config\InterceptorConfig.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\controller\NotificationController.java
 G:\邹熙\cursor 2\cursor\book-trade\src\main\java\com\booktrade\entity\Category.java

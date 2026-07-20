@@ -15,7 +15,7 @@ spring:
       path: /h2-console
   sql:
     init:
-      mode: ${SQL_INIT:never}
+      mode: ${SQL_INIT:always}
       continue-on-error: true
       schema-locations: classpath:${SCHEMA_FILE:schema-h2.sql}
       data-locations: classpath:${DATA_FILE:data-h2.sql}

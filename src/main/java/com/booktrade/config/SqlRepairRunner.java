@@ -1,4 +1,4 @@
-﻿package com.booktrade.config;
+package com.booktrade.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

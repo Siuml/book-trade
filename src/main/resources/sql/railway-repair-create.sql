@@ -1,4 +1,4 @@
-﻿-- Railway MySQL auto-repair (CREATE TABLE IF NOT EXISTS only 鈥?safe to run on every startup)
+-- Railway MySQL auto-repair (CREATE TABLE IF NOT EXISTS only 鈥?safe to run on every startup)
 -- ALTER TABLE is handled by SqlRepairRunner Java code
 
 CREATE TABLE IF NOT EXISTS `user` (

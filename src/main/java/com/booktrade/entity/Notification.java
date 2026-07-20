@@ -24,7 +24,7 @@ public class Notification {
 
     private Integer isRead;
 
-    private LocalDateTime createTime;
+    private LocalDateTime createTime = LocalDateTime.now();
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

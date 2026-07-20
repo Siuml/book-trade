@@ -15,7 +15,7 @@ spring:
       path: /h2-console
   sql:
     init:
-      mode: always
+      mode: ${SQL_INIT:never}
       schema-locations: classpath:${SCHEMA_FILE:schema-h2.sql}
       data-locations: classpath:${DATA_FILE:data-h2.sql}
   thymeleaf:

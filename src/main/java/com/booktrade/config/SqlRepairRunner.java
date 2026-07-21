@@ -45,9 +45,10 @@ public class SqlRepairRunner implements CommandLineRunner {
                 log.warn("SqlRepairRunner: table creation had errors (may be ok): {}", e.getMessage());
             }
 
-            // Step 2: Add missing `deleted` columns
+            // Step 2: Add missing columns
             tryAddColumn(conn, "user", "deleted", "TINYINT NOT NULL DEFAULT 0");
             tryAddColumn(conn, "book", "deleted", "TINYINT NOT NULL DEFAULT 0");
+            tryAddColumn(conn, "user", "email", "VARCHAR(255) DEFAULT NULL");
 
             // Step 3: Fix notification table AUTO_INCREMENT (critical for broadcast)
             fixNotificationAutoIncrement(conn);

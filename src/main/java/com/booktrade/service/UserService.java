@@ -40,4 +40,15 @@ public class UserService {
     public User getById(Long id) {
         return userMapper.selectById(id);
     }
+
+    public boolean updateProfile(Long id, String nickname, String phone, String email) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            return false;
+        }
+        user.setNickname(nickname);
+        user.setPhone(phone);
+        user.setEmail(email);
+        return userMapper.updateById(user) > 0;
+    }
 }

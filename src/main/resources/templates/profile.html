@@ -10,12 +10,16 @@
     <h4 class="mb-3" th:text="#{profile.title}">My Profile</h4>
 
     <div class="card mb-4">
-        <div class="card-header" th:text="#{profile.info}">Personal Info</div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span th:text="#{profile.info}">Personal Info</span>
+            <a th:href="@{/profile/edit}" class="btn btn-sm btn-primary" th:text="#{profile.edit}">Edit</a>
+        </div>
         <div class="card-body">
             <table class="table table-borderless">
                 <tr><td width="120"><strong th:text="#{profile.username}">Username</strong></td><td th:text="${profileUser.username}">Username</td></tr>
                 <tr><td><strong th:text="#{profile.nickname}">Nickname</strong></td><td th:text="${profileUser.nickname}">Nickname</td></tr>
-                <tr><td><strong th:text="#{profile.phone}">Phone</strong></td><td th:text="${profileUser.phone}">Phone</td></tr>
+                <tr><td><strong th:text="#{profile.phone}">Phone</strong></td><td th:text="${profileUser.phone != null ? profileUser.phone : '-'}">Phone</td></tr>
+                <tr><td><strong th:text="#{profile.email}">Email</strong></td><td th:text="${profileUser.email != null ? profileUser.email : '-'}">Email</td></tr>
                 <tr><td><strong th:text="#{profile.role}">Role</strong></td><td><span th:if="${profileUser.role == 1}" th:text="#{profile.admin}"></span><span th:else th:text="#{profile.student}"></span></td></tr>
                 <tr><td><strong th:text="#{profile.registerTime}">Joined</strong></td><td th:text="${#temporals.format(profileUser.createTime, 'yyyy-MM-dd')}">Date</td></tr>
             </table>

@@ -21,6 +21,8 @@ public class User {
 
     private String phone;
 
+    private String email;
+
     /** 角色：0-学生 1-管理员 */
     private Integer role;
 
@@ -67,6 +69,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Integer getRole() {

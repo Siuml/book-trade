@@ -69,4 +69,44 @@ public class UserController {
         session.invalidate();
         return "redirect:/";
     }
+
+    @GetMapping("/profile/edit")
+    public String editProfilePage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute(LoginInterceptor.SESSION_USER);
+        if (user == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", user);
+        return "profile-edit";
+    }
+
+    @PostMapping("/profile/edit")
+    public String editProfile(@RequestParam String nickname,
+                              @RequestParam(required = false) String phone,
+                              @RequestParam(required = false) String email,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute(LoginInterceptor.SESSION_USER);
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (nickname == null || nickname.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "msg.profile.nickname.empty");
+            return "redirect:/profile/edit";
+        }
+
+        boolean success = userService.updateProfile(user.getId(), nickname, phone, email);
+        if (success) {
+            user.setNickname(nickname);
+            user.setPhone(phone);
+            user.setEmail(email);
+            session.setAttribute(LoginInterceptor.SESSION_USER, user);
+            redirectAttributes.addFlashAttribute("success", "msg.profile.updated");
+            return "redirect:/profile";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "msg.profile.update_failed");
+            return "redirect:/profile/edit";
+        }
+    }
 }

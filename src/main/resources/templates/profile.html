@@ -16,7 +16,7 @@
                 <tr><td width="120"><strong th:text="#{profile.username}">Username</strong></td><td th:text="${profileUser.username}">Username</td></tr>
                 <tr><td><strong th:text="#{profile.nickname}">Nickname</strong></td><td th:text="${profileUser.nickname}">Nickname</td></tr>
                 <tr><td><strong th:text="#{profile.phone}">Phone</strong></td><td th:text="${profileUser.phone}">Phone</td></tr>
-                <tr><td><strong th:text="#{profile.role}">Role</strong></td><td th:text="${profileUser.role == 1 ? #{profile.admin} : #{profile.student}}">Role</td></tr>
+                <tr><td><strong th:text="#{profile.role}">Role</strong></td><td><span th:if="${profileUser.role == 1}" th:text="#{profile.admin}"></span><span th:else th:text="#{profile.student}"></span></td></tr>
                 <tr><td><strong th:text="#{profile.registerTime}">Joined</strong></td><td th:text="${#temporals.format(profileUser.createTime, 'yyyy-MM-dd')}">Date</td></tr>
             </table>
         </div>

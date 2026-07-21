@@ -128,6 +128,7 @@ public class BookController {
     @GetMapping("/publish")
     public String publishPage(Model model) {
         model.addAttribute("categories", categoryService.listAll());
+        model.addAttribute("book", new Book());
         return "book-form";
     }
 

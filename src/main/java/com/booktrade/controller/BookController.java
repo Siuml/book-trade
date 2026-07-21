@@ -145,6 +145,11 @@ public class BookController {
                           RedirectAttributes redirectAttributes) throws IOException {
         User user = (User) session.getAttribute(LoginInterceptor.SESSION_USER);
 
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            redirectAttributes.addFlashAttribute("error", "msg.book.price.invalid");
+            return "redirect:/book/publish";
+        }
+
         Book book = new Book();
         book.setTitle(title);
         book.setAuthor(author);

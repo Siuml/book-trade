@@ -49,6 +49,9 @@ public class SqlRepairRunner implements CommandLineRunner {
             tryAddColumn(conn, "user", "deleted", "TINYINT NOT NULL DEFAULT 0");
             tryAddColumn(conn, "book", "deleted", "TINYINT NOT NULL DEFAULT 0");
 
+            // Step 3: Fix notification table AUTO_INCREMENT (critical for broadcast)
+            fixNotificationAutoIncrement(conn);
+
             log.info("SqlRepairRunner: all repairs complete!");
 
         } catch (Exception e) {
@@ -69,6 +72,33 @@ public class SqlRepairRunner implements CommandLineRunner {
                 log.warn("SqlRepairRunner: `{}`.`{}` - {}", table, column,
                     msg != null ? msg.substring(0, Math.min(100, msg.length())) : "unknown");
             }
+        }
+    }
+
+    private void fixNotificationAutoIncrement(Connection conn) {
+        try {
+            String checkSql = "SELECT column_type FROM information_schema.columns " +
+                    "WHERE table_schema = DATABASE() AND table_name = 'notification' AND column_name = 'id'";
+            try (Statement stmt = conn.createStatement();
+                 java.sql.ResultSet rs = stmt.executeQuery(checkSql)) {
+                if (rs.next()) {
+                    String columnType = rs.getString("column_type");
+                    if (columnType != null && !columnType.toUpperCase().contains("AUTO_INCREMENT")) {
+                        log.info("SqlRepairRunner: notification.id missing AUTO_INCREMENT, fixing...");
+                        String alterSql = "ALTER TABLE `notification` MODIFY COLUMN `id` BIGINT NOT NULL AUTO_INCREMENT";
+                        try (Statement alterStmt = conn.createStatement()) {
+                            alterStmt.execute(alterSql);
+                            log.info("SqlRepairRunner: SUCCESS - notification.id now has AUTO_INCREMENT");
+                        }
+                    } else {
+                        log.info("SqlRepairRunner: notification.id already has AUTO_INCREMENT");
+                    }
+                } else {
+                    log.warn("SqlRepairRunner: notification table or id column not found");
+                }
+            }
+        } catch (Exception e) {
+            log.warn("SqlRepairRunner: fixNotificationAutoIncrement failed: {}", e.getMessage());
         }
     }
 }
